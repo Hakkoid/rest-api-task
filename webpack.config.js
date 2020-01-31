@@ -1,10 +1,11 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+require('babel-polyfill');
 
 module.exports = {
   mode: 'development',
-  entry: './src/index.jsx',
+  entry: ['babel-polyfill', './src/index.jsx'],
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: 'main.bundle.js',
@@ -35,7 +36,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-react', '@babel/preset-env'],
+            presets: ['@babel/preset-env', '@babel/preset-react'],
           },
         },
       },
