@@ -32,6 +32,6 @@ export async function fetchVehicles(page = 0, pageSize = 10) {
 
   return {
     vehicles: formatedVehicles,
-    totalCount,
+    totalCount: parseInt(totalCount, 10),
   }
 }

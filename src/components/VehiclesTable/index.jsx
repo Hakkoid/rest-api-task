@@ -73,7 +73,7 @@ class VehiclesTable extends Component {
 
     const pagination = {
       pageSize: PAGE_SIZE,
-      total: parseInt(totalCount, 10),
+      total: totalCount,
       onChange: this.handleChangePage,
     }
 
@@ -93,20 +93,26 @@ class VehiclesTable extends Component {
 }
 
 VehiclesTable.propTypes = {
-  pages: PropTypes.arrayOf({
-    id: PropTypes.string,
-    model: PropTypes.string,
-    brand: PropTypes.string,
-    vin: PropTypes.string,
-    dealerName: PropTypes.string,
-    officeId: PropTypes.string,
-    dealerData: {
-      offices: PropTypes.arrayOf({
+  pages: PropTypes.objectOf(
+    PropTypes.arrayOf(
+      PropTypes.shape({
         id: PropTypes.string,
-        address: PropTypes.string,
+        model: PropTypes.string,
+        brand: PropTypes.string,
+        vin: PropTypes.string,
+        dealerName: PropTypes.string,
+        officeId: PropTypes.string,
+        dealerData: PropTypes.shape({
+          offices: PropTypes.arrayOf(
+            PropTypes.shape({
+              id: PropTypes.string,
+              address: PropTypes.string,
+            }),
+          ),
+        }),
       }),
-    },
-  }).isRequired,
+    ),
+  ).isRequired,
   getVehicles: PropTypes.func.isRequired,
   totalCount: PropTypes.number.isRequired,
   loading: PropTypes.bool.isRequired,
