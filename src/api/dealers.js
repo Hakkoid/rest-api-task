@@ -1,8 +1,10 @@
-import { apiUrl } from './../constants/api'
+import { apiUrl } from '../constants/api'
+import { mapDealer } from '../helpers/mapping'
 
-export async function getDealers(ids) {
+export async function fetchDealers(ids) {
   const response = await fetch(`${apiUrl}/dealers/?id__in=${ids.join(',')}`)
   const dealers = await response.json()
 
-  return dealers
+  const formatedDealers = dealers.map(mapDealer)
+  return formatedDealers
 }
