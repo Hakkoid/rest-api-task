@@ -1,7 +1,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-require('babel-polyfill');
+require('babel-polyfill')
 
 module.exports = {
   mode: 'development',
@@ -16,6 +16,13 @@ module.exports = {
   devtool: 'inline-source-map',
   module: {
     rules: [
+      {
+        test: /\.css$/i,
+        use: [
+          'style-loader',
+          'css-loader',
+        ],
+      },
       {
         test: /\.s[ac]ss$/i,
         use: [
@@ -37,6 +44,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env', '@babel/preset-react'],
+            plugins: ['@babel/plugin-proposal-class-properties'],
           },
         },
       },
