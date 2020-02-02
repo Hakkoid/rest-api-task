@@ -8,6 +8,6 @@ export function* getDealersSaga() {
   while (true) {
     const { ids } = yield take(GET_DEALERS)
     const dealers = yield call(fetchDealers, ids)
-    put(setDealers(dealers))
+    yield put(setDealers(dealers))
   }
 }

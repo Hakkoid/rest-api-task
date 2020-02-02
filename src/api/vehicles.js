@@ -24,14 +24,23 @@ export async function fetchVehicles(page = 0, pageSize = 10) {
     .map(([key, value]) => `${key}=${value}`)
     .join('&')
 
-  const response = await fetch(`${apiUrl}/vehicles/?${query}`, options)
-  const vehicles = await response.json()
-  const formatedVehicles = vehicles.map(mapVehicle)
+  try {
+    const response = await fetch(`${apiUrl}/vehicles/?${query}`, options)
+    const vehicles = await response.json()
+    const formatedVehicles = vehicles.map(mapVehicle)
 
-  const totalCount = response.headers.get('X-Total-Count')
+    const totalCount = response.headers.get('X-Total-Count')
 
-  return {
-    vehicles: formatedVehicles,
-    totalCount: parseInt(totalCount, 10),
+    return {
+      vehicles: formatedVehicles,
+      totalCount: parseInt(totalCount, 10),
+    }
+  } catch (e) {
+    console.error(e)
+
+    return {
+      vehicles: [],
+      totalCount: null,
+    }
   }
 }
