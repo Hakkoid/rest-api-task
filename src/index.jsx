@@ -1,11 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import VehiclesTable from './components/VehiclesTable'
+import store from './store'
+
 import './style.scss'
-import { getVehicles } from './api/vehicles'
-import { getDealers } from './api/dealers'
 
 const App = () => (
-  <div></div>
+  <Provider store={store}>
+    <VehiclesTable />
+  </Provider>
 )
 
 ReactDOM.render(
