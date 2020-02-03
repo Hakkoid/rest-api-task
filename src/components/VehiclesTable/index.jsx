@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Table } from 'antd'
 import { getVehicles as getVehiclesAction } from '../../actions/vehicles'
 import 'antd/dist/antd.css'
+import { getUrlParams } from '../../helpers'
 
 const PAGE_SIZE = 10
 
@@ -47,34 +48,42 @@ const COLUMNS = [
 ]
 
 class VehiclesTable extends Component {
-  state = {
-    page: 0,
-  }
-
   componentDidMount() {
-    const { page } = this.state
-    const { getVehicles } = this.props
-    getVehicles(page)
+    const { location, getVehicles } = this.props
+    const { page, pageSize } = getUrlParams(location)
+
+    getVehicles(page, pageSize)
   }
 
   handleChangePage = (page) => {
-    const { pages, getVehicles } = this.props
+    const { pages, getVehicles, history, location } = this.props
+    const params = getUrlParams(location)
+    const { pageSize } = params
 
     if (!pages[page - 1]) {
-      getVehicles(page - 1)
+      getVehicles(page - 1, pageSize)
     }
 
-    this.setState({ page: page - 1 })
+    params.page = page - 1
+
+    const strParams = Object.entries(params)
+      .map(([key, val]) => `${key}=${val}`)
+      .join('&')
+
+    history.push(`/?${strParams}`)
   }
 
   render() {
-    const { pages, totalCount, loading } = this.props
-    const { page } = this.state
+    const { pages, totalCount, loading, location } = this.props
+    const params = getUrlParams(location)
+    const page = params.page || 0
+    const pageSize = params.pageSize || PAGE_SIZE
 
     const pagination = {
-      pageSize: PAGE_SIZE,
+      pageSize: Number(pageSize),
       total: totalCount,
       onChange: this.handleChangePage,
+      current: Number(page) + 1,
     }
 
     const dataSourse = pages[page] && pages[page].map((car) => ({ ...car, key: car.id }))
@@ -116,6 +125,12 @@ VehiclesTable.propTypes = {
   getVehicles: PropTypes.func.isRequired,
   totalCount: PropTypes.number.isRequired,
   loading: PropTypes.bool.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  location: PropTypes.shape({
+    search: PropTypes.string,
+  }).isRequired,
 }
 
 const mapStateToProps = ({ vehicles }) => ({
@@ -125,8 +140,8 @@ const mapStateToProps = ({ vehicles }) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  getVehicles: (page) => {
-    dispatch(getVehiclesAction({ page, pageSize: PAGE_SIZE }))
+  getVehicles: (page, pageSize) => {
+    dispatch(getVehiclesAction({ page, pageSize: pageSize || PAGE_SIZE }))
   },
 })
 
