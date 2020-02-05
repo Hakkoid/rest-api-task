@@ -50,7 +50,7 @@ const COLUMNS = [
 class VehiclesTable extends Component {
   componentDidMount() {
     const { location, getVehicles } = this.props
-    const { page, pageSize } = getUrlParams(location)
+    const { page = 0, pageSize = PAGE_SIZE } = getUrlParams(location)
 
     getVehicles(page, pageSize)
   }
@@ -75,9 +75,7 @@ class VehiclesTable extends Component {
 
   render() {
     const { pages, totalCount, loading, location } = this.props
-    const params = getUrlParams(location)
-    const page = params.page || 0
-    const pageSize = params.pageSize || PAGE_SIZE
+    const { page = 0, pageSize = PAGE_SIZE } = getUrlParams(location)
 
     const pagination = {
       pageSize: Number(pageSize),
